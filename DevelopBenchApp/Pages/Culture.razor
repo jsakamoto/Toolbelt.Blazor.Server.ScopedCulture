@@ -1,0 +1,55 @@
+﻿@page "/culture"
+@using System.Globalization
+@using Toolbelt.Blazor.Server.ScopedCulture
+@implements IDisposable
+
+<ScopedCultureZone>
+
+    <h1>Culture</h1>
+
+    <p>
+        <b>Current Culture:</b>
+        <span id="cultureinfo-currentculture">@CultureInfo.CurrentCulture.DisplayName (@CultureInfo.CurrentCulture.Name)</span>
+        <br />
+        <b>Scoped Culture:</b>
+        <span id="scopedculture-currentculture">@ScopedCulture.CurrentCulture.DisplayName (@ScopedCulture.CurrentCulture.Name)</span>
+    </p>
+    <p>
+        <b>Today:</b>
+        <span id="today">@DateTime.Now.ToLongDateString()</span>
+    </p>
+    <p>
+        <b>Number:</b>
+        <span id="number">@_NumberText</span>
+    </p>
+    <p>
+        <b>Current count:</b> <span id="current-count">@_CurrentCount</span>
+        <button class="btn btn-primary ml-3" @onclick="@(()=>{_CurrentCount++;})">Click me</button>
+    </p>
+
+</ScopedCultureZone>
+
+@code
+{
+    [CascadingParameter] public IScopedCulture ScopedCulture { get; set; }
+
+    private int _CurrentCount;
+
+    private string _NumberText = "";
+
+    protected override void OnInitialized()
+    {
+        this.ScopedCulture.CurrentCultureChanged += this.ScopedCulture_CurrentCultureChanged;
+        this.ScopedCulture_CurrentCultureChanged(this, EventArgs.Empty);
+    }
+
+    private void ScopedCulture_CurrentCultureChanged(object sender, EventArgs e)
+    {
+        _NumberText = 1234.5m.ToString();
+    }
+
+    public void Dispose()
+    {
+    this.ScopedCulture.CurrentCultureChanged -= this.ScopedCulture_CurrentCultureChanged;
+    }
+}

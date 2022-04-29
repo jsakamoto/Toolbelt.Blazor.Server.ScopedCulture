@@ -1,0 +1,27 @@
+﻿@using Microsoft.AspNetCore.Components
+@implements IDisposable
+@inject Toolbelt.Blazor.Server.ScopedCulture.IScopedCulture ScopedCulture
+
+<CascadingValue Value="@ScopedCulture">
+    @ChildContent
+</CascadingValue>
+
+@code
+{
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+
+    protected override void OnInitialized()
+    {
+        this.ScopedCulture.CurrentCultureChanged += ScopedCulture_CurrentCultureChanged; 
+    }
+
+    private void ScopedCulture_CurrentCultureChanged(object? sender, EventArgs args)
+    {
+        this.InvokeAsync(() => this.StateHasChanged());
+    }
+
+    public void Dispose()
+    {
+        this.ScopedCulture.CurrentCultureChanged -= ScopedCulture_CurrentCultureChanged;
+    }
+}

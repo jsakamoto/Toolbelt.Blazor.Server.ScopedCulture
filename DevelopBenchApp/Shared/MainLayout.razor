@@ -1,0 +1,39 @@
+﻿@inherits LayoutComponentBase
+@using System.Runtime.InteropServices
+@using System.Globalization
+
+<div class="sidebar">
+    <NavMenu />
+</div>
+
+<div class="main">
+    <div class="top-row px-4">
+        <a href="https://docs.microsoft.com/aspnet/" target="_blank">About</a>
+    </div>
+
+    <div class="content px-4">
+        @Body
+        <div class="footer">
+            <div class="form-row align-items-center text-muted px-4">
+
+                <div class="col-auto runtime-information">
+                    @RuntimeInformation.FrameworkDescription / @RuntimeInformation.ProcessArchitecture
+                </div>
+
+                <div class="col-auto">|</div>
+
+                <div class="col-auto small" id="cultureinfo-currentculture-displayname">
+                    @CultureInfo.CurrentCulture.DisplayName
+                </div>
+
+                <div class="col"></div>
+                <div class="col-auto">
+                    <span class="oi oi-globe" aria-hidden="true"></span>
+                </div>
+                <div class="col-auto">
+                    <CultureSelector />
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

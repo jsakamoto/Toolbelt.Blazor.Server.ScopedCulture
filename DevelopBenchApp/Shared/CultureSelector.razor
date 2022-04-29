@@ -1,0 +1,33 @@
+﻿@using Microsoft.AspNetCore.Builder
+@using Microsoft.Extensions.Options
+@inject IOptions<RequestLocalizationOptions> LocalizationOptions
+@inject IScopedCulture ScopedCulture
+
+<ScopedCultureZone>
+
+    <select id="culture-selector" class="form-control form-control-sm" @onchange="(args => OnChangeSelectedCulture(args))">
+        @foreach (var culture in this.Cultures)
+        {
+            <option value="@culture.Name" selected="@(culture.Name == CultureInfo.CurrentCulture.Name)">
+                @culture.EnglishName (@culture.Name)
+            </option>
+        }
+    </select>
+
+</ScopedCultureZone>
+
+@code
+{
+    private IEnumerable<CultureInfo> Cultures = Enumerable.Empty<CultureInfo>();
+
+    protected override void OnInitialized()
+    {
+        this.Cultures = LocalizationOptions.Value.SupportedCultures;
+    }
+
+    private void OnChangeSelectedCulture(ChangeEventArgs args)
+    {
+        var selectedCulture = this.Cultures.First(c => c.Name == args.Value.ToString());
+        this.ScopedCulture.SetCurrentCulture(selectedCulture);
+    }
+}
